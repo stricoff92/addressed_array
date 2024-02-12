@@ -59,4 +59,7 @@ aa_free_addressed_array(aa);
 
 ```
 
+This code was compiled on a `x86_64 GNU/Linux` machine. KHASH is required to use AddressedArrays.
+
+
 ![](https://media.giphy.com/media/QQKhpfeRQqz6M/giphy.gif)
