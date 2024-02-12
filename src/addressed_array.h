@@ -45,7 +45,6 @@ void aa_free_addressed_array(AddressedArray* aa) {
 
 void* aa_allocate_pointer_to_new_slot(AddressedArray *aa, unsigned long element_id) {
     if (kh_get(id_ix_map, aa->address_book, element_id) != kh_end(aa->address_book)) {
-        slog_error("aa_allocate_pointer_to_new_slot() failed to allocate pointer, element_id already exists in address book.");
         return NULL;
     }
     if(aa->count < aa->capacity) {
@@ -69,8 +68,6 @@ void* aa_allocate_pointer_to_new_slot(AddressedArray *aa, unsigned long element_
         aa->capacity += aa->realloc_size;
         return aa_allocate_pointer_to_new_slot(aa, element_id);
     } else {
-        slog_error(
-            "aa_allocate_pointer_to_new_slot() failed to allocate, could not expand memory allocation.");
         return NULL;
     }
 }
@@ -78,7 +75,6 @@ void* aa_allocate_pointer_to_new_slot(AddressedArray *aa, unsigned long element_
 void* aa_get_pointer_from_id(AddressedArray *aa, unsigned long element_id) {
     khint_t i = kh_get(id_ix_map, aa->address_book, element_id);
     if (i == kh_end(aa->address_book)) {
-        slog_error("aa_get_pointer_from_id() could not find id in addressbook.");
         return NULL;
     }
     size_t ix = kh_val(aa->address_book, i);
@@ -89,7 +85,6 @@ int aa_drop_element(AddressedArray *aa, unsigned long element_id) {
     khint_t _i;
     _i = kh_get(id_ix_map, aa->address_book, element_id);
     if (_i == kh_end(aa->address_book)) {
-        slog_error("aa_drop_element() could not find id in addressbook.");
         return -1;
     }
     size_t del_ix = kh_val(aa->address_book, _i);
