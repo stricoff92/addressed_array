@@ -50,6 +50,14 @@ to2->a = 1337;
 TestObject *q1 = (TestObject*) aa_get_pointer_from_id(aa, 1337)
 printf("id = %d\n", q1->base.id);
 
+// Loop through elements
+TestObject* o;
+for(int i = 0; i < aa->count; i++)
+{
+    o = ((TestObject*) aa->data) + i;
+    printf("%d %d\n", o->base.id, o->a)l
+}
+
 // Delete object 1337 and move object 42069 to the zero'th slot.
 aa_drop_element(aa, 1337);
 
