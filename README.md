@@ -55,7 +55,7 @@ TestObject* o;
 for(int i = 0; i < aa->count; i++)
 {
     o = ((TestObject*) aa->data) + i;
-    printf("%d %d\n", o->base.id, o->a)l
+    printf("%d %d\n", o->base.id, o->a)
 }
 
 // Delete object 1337 and move object 42069 to the zero'th slot.
