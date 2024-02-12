@@ -40,6 +40,7 @@ AddressedArray* aa_malloc_addressed_array(
 
 void aa_free_addressed_array(AddressedArray* aa) {
     free(aa->data);
+    kh_destroy(id_ix_map, aa->address_book);
     free(aa);
 }
 
