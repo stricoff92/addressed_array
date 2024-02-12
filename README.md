@@ -47,7 +47,7 @@ to2->base.id = 42069;
 to2->a = 1337;
 
 // Query object 1337
-TestObject *q1 = aa_get_pointer_from_id(aa, 1337)
+TestObject *q1 = (TestObject*) aa_get_pointer_from_id(aa, 1337)
 printf("id = %d\n", q1->base.id);
 
 // Delete object 1337 and move object 42069 to the zero'th slot.
