@@ -11,3 +11,50 @@ __Problem:__ As a C n00b it seems like a data structure either supports fast ite
 Each AddressedArray instance contains 2 things:
  - Void Pointer that references a contiguous block of memory
  - KHASH data structure that maps object ID to memory offsets
+
+When a slot is allocated: a pointer is generated which points to the last slot on the array.
+
+When an element is deleted the last element of the array is moved to the vacated spot.
+
+
+### Example Usage
+
+```c
+
+#include "addressed_array.h"
+#include "base_object.h"
+
+
+typedef struct TestObject {
+    BaseObject base;
+    int  a;
+} TestObject;
+
+AddressedArray* aa = aa_malloc_addressed_array(
+    sizeof (TestElement), // Element Size
+    10,                   // Initial Capacity
+    10                    // Reallocation Size
+);
+
+// Reserve slots for 2 elements with ids 1337 and 42069 respectively.
+TestObject *to1 = (TestObject*) aa_allocate_pointer_to_new_slot(aa, 1337);
+TestObject *to2 = (TestObject*) aa_allocate_pointer_to_new_slot(aa, 42069);
+
+// Write data to the array
+to1->base.id = 1337;
+to1->a = 123;
+to2->base.id = 42069;
+to2->a = 1337;
+
+// Query object 1337
+TestObject *q1 = aa_get_pointer_from_id(aa, 1337)
+printf("id = %d\n", q1->base.id);
+
+// Delete object 1337 and move object 42069 to the zero'th slot.
+aa_drop_element(aa, 1337);
+
+
+// Clean up
+aa_free_addressed_array(aa);
+
+```
