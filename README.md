@@ -58,3 +58,5 @@ aa_drop_element(aa, 1337);
 aa_free_addressed_array(aa);
 
 ```
+
+![](https://media.giphy.com/media/QQKhpfeRQqz6M/giphy.gif)
