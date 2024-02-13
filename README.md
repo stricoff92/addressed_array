@@ -24,9 +24,9 @@ When an element is deleted the last element of the array is moved to the vacated
 #include "addressed_array.h"
 #include "base_object.h"
 
-
+// The first prop. of the elem. should be an uint32_t with the field name "id".
 typedef struct TestObject {
-    BaseObject base;
+    BaseAAObject base;
     int  a;
 } TestObject;
 

@@ -5,9 +5,9 @@
 
 #include "stdint.h"
 
-typedef struct BaseObject {
+typedef struct BaseAAObject {
     uint32_t id;
-} BaseObject;
+} BaseAAObject;
 
 
 #endif

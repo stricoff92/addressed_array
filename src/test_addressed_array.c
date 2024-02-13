@@ -30,7 +30,7 @@ typedef struct TestElement {
 } TestElement;
 
 typedef struct TestObject {
-    BaseObject base;
+    BaseAAObject base;
     int  a;
 } TestObject;
 
