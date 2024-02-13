@@ -6,11 +6,15 @@
 
 #include "khash.h"
 
-#include "base_object.h"
-
-
 
 KHASH_MAP_INIT_INT(id_ix_map, uint32_t)
+
+
+typedef struct BaseAAObject {
+    uint32_t id;
+} BaseAAObject;
+
+
 
 typedef struct AddressedArray
 {
