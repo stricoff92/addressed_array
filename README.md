@@ -40,7 +40,7 @@ AddressedArray* aa = aa_malloc_addressed_array(
 TestObject *to1 = (TestObject*) aa_allocate_pointer_to_new_slot(aa, &aa, 1337);
 TestObject *to2 = (TestObject*) aa_allocate_pointer_to_new_slot(aa, &aa, 42069);
 
-// Write data to the array
+// Write data to the data structure
 to1->base.id = 1337;
 to1->a = 123;
 to2->base.id = 42069;
@@ -51,7 +51,7 @@ TestObject data;
 data.base.id = 1337;
 data.a = 123;
 TestObject *to1 = (TestObject*) aa_allocate_pointer_to_new_slot(aa, &aa, 1337);
-memcpy(to1, &data, sizeof (TestObject))
+memcpy((void*) to1, (void*) &data, sizeof (TestObject))
 
 // Query object 1337
 TestObject *q1 = (TestObject*) aa_get_pointer_from_id(aa, 1337)
