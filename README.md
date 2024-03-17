@@ -35,8 +35,10 @@ AddressedArray* aa = aa_malloc_addressed_array(
 );
 
 // Reserve slots for 2 elements with ids 1337 and 42069 respectively.
-TestObject *to1 = (TestObject*) aa_allocate_pointer_to_new_slot(aa, 1337);
-TestObject *to2 = (TestObject*) aa_allocate_pointer_to_new_slot(aa, 42069);
+// We pass a pointer to aa such that the caller's reference can be updated if
+// aa_allocate_pointer_to_new_slot calls realloc.
+TestObject *to1 = (TestObject*) aa_allocate_pointer_to_new_slot(aa, &aa, 1337);
+TestObject *to2 = (TestObject*) aa_allocate_pointer_to_new_slot(aa, &aa, 42069);
 
 // Write data to the array
 to1->base.id = 1337;
