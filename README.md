@@ -46,6 +46,13 @@ to1->a = 123;
 to2->base.id = 42069;
 to2->a = 1337;
 
+// write data using memcpy
+TestObject data;
+data.base.id = 1337;
+data.a = 123;
+TestObject *to1 = (TestObject*) aa_allocate_pointer_to_new_slot(aa, &aa, 1337);
+memcpy(to1, &data, sizeof (TestObject))
+
 // Query object 1337
 TestObject *q1 = (TestObject*) aa_get_pointer_from_id(aa, 1337)
 printf("id = %d\n", q1->base.id);
