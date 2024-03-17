@@ -1,55 +1,65 @@
 
-
 #include "addressed_array.h"
 
 
 
 AddressedArray* aa_malloc_addressed_array(
-    size_t element_width,
-    size_t capacity,
-    size_t realloc_size
+    uint32_t element_width,
+    uint32_t capacity,
+    uint32_t realloc_size
 ) {
-    AddressedArray *aa = (AddressedArray*) malloc(sizeof (AddressedArray));
+    AddressedArray *aa = (AddressedArray*) malloc(
+        sizeof (AddressedArray)
+        + (capacity * element_width)
+    );
     aa->element_width = element_width;
     aa->capacity = capacity;
     aa->count = 0;
     aa->realloc_size = realloc_size;
     aa->address_book = kh_init(id_ix_map);
-    aa->data = malloc(element_width * capacity);
     return aa;
 }
 
 void aa_free_addressed_array(AddressedArray* aa) {
-    free(aa->data);
     kh_destroy(id_ix_map, aa->address_book);
     free(aa);
 }
 
-void* aa_allocate_pointer_to_new_slot(AddressedArray *aa, unsigned long element_id) {
+int aa_get_object_id_at_offset(AddressedArray *aa, uint32_t offset) {
+    if(offset >= aa->count) {
+        // slog_warn(
+        //     "aa_get_object_id_at_offset() offset out of range");
+        return -1;
+    }
+    return ((BaseAAObject*) (aa->data + offset * aa->element_width))->id;
+}
+
+void* aa_allocate_pointer_to_new_slot(AddressedArray *aa, AddressedArray **aap, unsigned long element_id) {
     if (kh_get(id_ix_map, aa->address_book, element_id) != kh_end(aa->address_book)) {
+        // slog_error(
+        //     "aa_allocate_pointer_to_new_slot() failed to allocate pointer, element_id already exists in address book.");
         return NULL;
     }
     if(aa->count < aa->capacity) {
-       // casting to (char*) shouldn't be needed when using gcc.
-        char* p = ((char *) aa->data) + (aa->count * aa->element_width);
-
-        int _ret_code;
-        khint_t i = kh_put(id_ix_map, aa->address_book, element_id, &_ret_code);
+        char* p = (aa->data) + (aa->count * aa->element_width);
+        int retcode;
+        khint_t i = kh_put(id_ix_map, aa->address_book, element_id, &retcode);
         kh_value(aa->address_book, i) = aa->count;
-
         aa->count++;
-        return p;
+        return (void*) p;
     }
     void *expanded = realloc(
-        aa->data,
-        (aa->capacity + aa->realloc_size)
-            * aa->element_width
+        aa,
+        sizeof (AddressedArray) + ((aa->capacity + aa->realloc_size) * aa->element_width)
     );
     if(expanded) {
-        aa->data = expanded;
+        aa = expanded;
+        *aap = expanded;
         aa->capacity += aa->realloc_size;
-        return aa_allocate_pointer_to_new_slot(aa, element_id);
+        return aa_allocate_pointer_to_new_slot(aa, aap, element_id);
     } else {
+        // slog_error(
+        //     "aa_allocate_pointer_to_new_slot() failed to allocate, could not expand memory allocation.");
         return NULL;
     }
 }
@@ -57,36 +67,38 @@ void* aa_allocate_pointer_to_new_slot(AddressedArray *aa, unsigned long element_
 void* aa_get_pointer_from_id(AddressedArray *aa, unsigned long element_id) {
     khint_t i = kh_get(id_ix_map, aa->address_book, element_id);
     if (i == kh_end(aa->address_book)) {
+        // slog_error("aa_get_pointer_from_id() could not find id in addressbook.");
         return NULL;
     }
-    size_t ix = kh_val(aa->address_book, i);
-    return ((char*) aa->data) + (ix * aa->element_width);
+    uint32_t ix = kh_val(aa->address_book, i);
+    return aa->data + (ix * aa->element_width);
 }
 
 int aa_drop_element(AddressedArray *aa, unsigned long element_id) {
     khint_t _i;
     _i = kh_get(id_ix_map, aa->address_book, element_id);
     if (_i == kh_end(aa->address_book)) {
+        // slog_error("aa_drop_element() could not find id in addressbook.");
         return -1;
     }
-    size_t del_ix = kh_val(aa->address_book, _i);
+    uint32_t del_ix = kh_val(aa->address_book, _i);
 
     memset(
-        (((char*) aa->data) + del_ix * aa->element_width),
+        aa->data + (del_ix * aa->element_width),
         0,
         aa->element_width
     );
 
     if(del_ix < aa->count - 1) {
         uint32_t move_ix = aa->count - 1;
-        uint32_t id_to_move = ((BaseAAObject*) (((char*) aa->data) + move_ix * aa->element_width))->id;
+        uint32_t id_to_move = aa_get_object_id_at_offset(aa, move_ix);
         memcpy(
-            (((char*)aa->data) + del_ix * aa->element_width),
-            (((char*)aa->data) + move_ix * aa->element_width),
+            aa->data + (del_ix * aa->element_width),
+            aa->data + (move_ix * aa->element_width),
             aa->element_width
         );
         memset(
-            (((char*)aa->data) + move_ix * aa->element_width),
+            aa->data + (move_ix * aa->element_width),
             0,
             aa->element_width
         );
@@ -106,3 +118,6 @@ int aa_drop_element(AddressedArray *aa, unsigned long element_id) {
     aa->count--;
     return (int) del_ix;
 }
+
+
+
