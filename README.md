@@ -7,8 +7,9 @@
  - Fast Hash Lookups
 
 Each AddressedArray instance contains 2 things:
- - Void Pointer that references a contiguous block of memory
+ - Meta information describing array contents: (element width, count)
  - KHASH data structure that maps object ID to memory offsets
+ - Flexible array member
 
 When a slot is allocated: a pointer is generated which points to the last slot on the array.
 
