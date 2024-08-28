@@ -25,14 +25,14 @@ When an element is deleted the last element of the array is moved to the vacated
 
 // The first prop. of the elem. should be an uint32_t with the field name "id".
 typedef struct test_object_t {
-    BaseAAObject base;
+    addressed_array_base_t base;
     int  a;
 } test_object_t;
 
 AddressedArray* aa = aa_malloc_addressed_array(
-    sizeof (TestElement), // Element Size
-    10,                   // Initial Capacity
-    10                    // Reallocation Size
+    sizeof (test_object_t), // Element Size
+    10,                    // Initial Capacity
+    10                     // Reallocation Size
 );
 
 // Reserve slots for 2 elements with ids 1337 and 42069 respectively.
