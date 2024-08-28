@@ -63,7 +63,7 @@ test_object_t *q1 = (test_object_t*) aa_get_pointer_from_id(aa, 1337)
 printf("id = %d\n", q1->base.id);
 
 // Loop through elements
-test_object_t* o;
+test_object_t *o;
 for(int i = 0; i < aa->count; i++)
 {
     o = ((test_object_t*) aa->data) + i;
