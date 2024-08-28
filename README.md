@@ -40,12 +40,16 @@ AddressedArray* aa = aa_malloc_addressed_array(
 // aa_allocate_pointer_to_new_slot calls realloc.
 test_object_t *to1 = (test_object_t*) aa_allocate_pointer_to_new_slot(&aa, 1337);
 test_object_t *to2 = (test_object_t*) aa_allocate_pointer_to_new_slot(&aa, 42069);
+test_object_t *to3 = (test_object_t*) aa_allocate_pointer_to_new_slot(&aa, 321);
 
 // Write data to the data structure
 to1->base.id = 1337;
 to1->a = 123;
 to2->base.id = 42069;
 to2->a = 1337;
+
+*((u32*) to3) = 321; // write id by casting object to integer pointer
+to3->a = 13444;
 
 // write data using memcpy
 test_object_t data;
