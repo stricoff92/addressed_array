@@ -24,10 +24,10 @@ When an element is deleted the last element of the array is moved to the vacated
 #include "base_object.h"
 
 // The first prop. of the elem. should be an uint32_t with the field name "id".
-typedef struct TestObject {
+typedef struct test_object_t {
     BaseAAObject base;
     int  a;
-} TestObject;
+} test_object_t;
 
 AddressedArray* aa = aa_malloc_addressed_array(
     sizeof (TestElement), // Element Size
@@ -38,8 +38,8 @@ AddressedArray* aa = aa_malloc_addressed_array(
 // Reserve slots for 2 elements with ids 1337 and 42069 respectively.
 // We pass a pointer to aa so the caller's reference can be updated if
 // aa_allocate_pointer_to_new_slot calls realloc.
-TestObject *to1 = (TestObject*) aa_allocate_pointer_to_new_slot(aa, &aa, 1337);
-TestObject *to2 = (TestObject*) aa_allocate_pointer_to_new_slot(aa, &aa, 42069);
+test_object_t *to1 = (test_object_t*) aa_allocate_pointer_to_new_slot(&aa, 1337);
+test_object_t *to2 = (test_object_t*) aa_allocate_pointer_to_new_slot(&aa, 42069);
 
 // Write data to the data structure
 to1->base.id = 1337;
@@ -48,21 +48,21 @@ to2->base.id = 42069;
 to2->a = 1337;
 
 // write data using memcpy
-TestObject data;
+test_object_t data;
 data.base.id = 1337;
 data.a = 123;
-TestObject *to1 = (TestObject*) aa_allocate_pointer_to_new_slot(aa, &aa, 1337);
-memcpy((void*) to1, (void*) &data, sizeof (TestObject))
+test_object_t *to1 = (test_object_t*) aa_allocate_pointer_to_new_slot(&aa, 1337);
+memcpy((void*) to1, (void*) &data, sizeof (test_object_t))
 
 // Query object 1337
-TestObject *q1 = (TestObject*) aa_get_pointer_from_id(aa, 1337)
+test_object_t *q1 = (test_object_t*) aa_get_pointer_from_id(aa, 1337)
 printf("id = %d\n", q1->base.id);
 
 // Loop through elements
-TestObject* o;
+test_object_t* o;
 for(int i = 0; i < aa->count; i++)
 {
-    o = ((TestObject*) aa->data) + i;
+    o = ((test_object_t*) aa->data) + i;
     printf("%d %d\n", o->base.id, o->a)
 }
 
