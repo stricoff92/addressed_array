@@ -38,9 +38,9 @@ AddressedArray* aa = aa_malloc_addressed_array(
 // Reserve slots for 2 elements with ids 1337 and 42069 respectively.
 // We pass a pointer to aa so the caller's reference can be updated if
 // aa_allocate_pointer_to_new_slot calls realloc.
-test_object_t *to1 = (test_object_t*) aa_allocate_pointer_to_new_slot(&aa, 1337);
-test_object_t *to2 = (test_object_t*) aa_allocate_pointer_to_new_slot(&aa, 42069);
-test_object_t *to3 = (test_object_t*) aa_allocate_pointer_to_new_slot(&aa, 321);
+test_object_t *to1 = aa_allocate_pointer_to_new_slot(&aa, 1337);
+test_object_t *to2 = aa_allocate_pointer_to_new_slot(&aa, 42069);
+test_object_t *to3 = aa_allocate_pointer_to_new_slot(&aa, 321);
 
 // Write data to the data structure
 to1->base.id = 1337;
@@ -55,8 +55,8 @@ to3->a = 13444;
 test_object_t data;
 data.base.id = 1337;
 data.a = 123;
-test_object_t *to1 = (test_object_t*) aa_allocate_pointer_to_new_slot(&aa, 1337);
-memcpy((void*) to1, (void*) &data, sizeof (test_object_t))
+test_object_t *to1 = aa_allocate_pointer_to_new_slot(&aa, 1337);
+memcpy(to1, &data, sizeof (test_object_t))
 
 // Query object 1337
 test_object_t *q1 = (test_object_t*) aa_get_pointer_from_id(aa, 1337)
