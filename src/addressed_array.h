@@ -70,7 +70,6 @@ void aa_free_addressed_array(addressed_array_t* aa);
 
 int aa_get_object_id_at_offset(addressed_array_t *aa, u32 offset);
 
-// TODO: remove aa param, use the aap param only.
 void* aa_allocate_pointer_to_new_slot(
     addressed_array_t **aap,
     u32 element_id
