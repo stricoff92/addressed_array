@@ -39,11 +39,11 @@ typedef double      f64;
 
 KHASH_MAP_INIT_INT(id_ix_map, u32)
 
-typedef struct addressed_array_base_t {
+typedef struct aa_Array_Base {
     u32 id;
-} addressed_array_base_t;
+} aa_Array_Base;
 
-typedef struct addressed_array_t
+typedef struct aa_Array
 {
     u32 element_width;
     u32 capacity;
@@ -56,32 +56,32 @@ typedef struct addressed_array_t
         Data points to the beginning of the array of elements.
     */
     u8 data[ ];
-} addressed_array_t;
+} aa_Array;
 
 
-addressed_array_t* aa_malloc_addressed_array(
+aa_Array* aa_malloc_addressed_array(
     u32 element_width,
     u32 capacity,
     u32 realloc_size
 );
 
 
-void aa_free_addressed_array(addressed_array_t* aa);
+void aa_free_addressed_array(aa_Array* aa);
 
-int aa_get_object_id_at_offset(addressed_array_t *aa, u32 offset);
+int aa_get_object_id_at_offset(aa_Array *aa, u32 offset);
 
 void* aa_allocate_pointer_to_new_slot(
-    addressed_array_t **aap,
+    aa_Array **aap,
     u32 element_id
 );
 
 void* aa_get_pointer_from_id(
-    addressed_array_t *aa,
+    aa_Array *aa,
     u32 element_id
 );
 
-int aa_drop_element(addressed_array_t *aa, u32 element_id);
+int aa_drop_element(aa_Array *aa, u32 element_id);
 
-int aa_get_next_supplemental_data_ix(addressed_array_t *aa);
+int aa_get_next_supplemental_data_ix(aa_Array *aa);
 
 #endif

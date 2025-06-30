@@ -4,13 +4,13 @@
 
 
 
-addressed_array_t* aa_malloc_addressed_array(
+aa_Array* aa_malloc_addressed_array(
     u32 element_width,
     u32 capacity,
     u32 realloc_size
 ) {
-    addressed_array_t *aa = malloc(
-        sizeof (addressed_array_t)      // Allocate space for the addressed_array_t struct
+    aa_Array *aa = malloc(
+        sizeof (aa_Array)      // Allocate space for the aa_Array struct
         + (capacity * element_width) // Allocate space for the array of elements
     );
     if(!aa) return NULL;
@@ -27,20 +27,20 @@ addressed_array_t* aa_malloc_addressed_array(
     return aa;
 }
 
-void aa_free_addressed_array(addressed_array_t* aa) {
+void aa_free_addressed_array(aa_Array* aa) {
     kh_destroy(id_ix_map, aa->address_book);
     free(aa);
 }
 
-int aa_get_object_id_at_offset(addressed_array_t *aa, u32 offset) {
+int aa_get_object_id_at_offset(aa_Array *aa, u32 offset) {
     if(offset >= aa->count) {
         return -1;
     }
-    return ((addressed_array_base_t*) (aa->data + offset * aa->element_width))->id;
+    return ((aa_Array_Base*) (aa->data + offset * aa->element_width))->id;
 }
 
 void* aa_allocate_pointer_to_new_slot(
-    addressed_array_t **aap,
+    aa_Array **aap,
     u32 element_id
 ) {
     if (kh_get(id_ix_map, (*aap)->address_book, element_id) != kh_end((*aap)->address_book)) {
@@ -49,7 +49,7 @@ void* aa_allocate_pointer_to_new_slot(
     if((*aap)->count < (*aap)->capacity) {
         void *p = (void *) (((*aap)->data) + ((*aap)->count * (*aap)->element_width));
         memset(p, 0, (*aap)->element_width);
-        ((addressed_array_base_t*) p)->id = element_id;
+        ((aa_Array_Base*) p)->id = element_id;
         int retcode;
         khint_t i = kh_put(id_ix_map, (*aap)->address_book, element_id, &retcode);
         kh_value((*aap)->address_book, i) = (*aap)->count;
@@ -58,7 +58,7 @@ void* aa_allocate_pointer_to_new_slot(
     }
     void *expanded = realloc(
         (*aap),
-        sizeof (addressed_array_t) + (((*aap)->capacity + (*aap)->realloc_size) * (*aap)->element_width)
+        sizeof (aa_Array) + (((*aap)->capacity + (*aap)->realloc_size) * (*aap)->element_width)
     );
     if(expanded) {
         *aap = expanded;
@@ -69,7 +69,7 @@ void* aa_allocate_pointer_to_new_slot(
     }
 }
 
-void* aa_get_pointer_from_id(addressed_array_t *aa, u32 element_id) {
+void* aa_get_pointer_from_id(aa_Array *aa, u32 element_id) {
     khint_t i = kh_get(id_ix_map, aa->address_book, element_id);
     if (i == kh_end(aa->address_book)) {
         return NULL;
@@ -78,7 +78,7 @@ void* aa_get_pointer_from_id(addressed_array_t *aa, u32 element_id) {
     return aa->data + (ix * aa->element_width);
 }
 
-int aa_drop_element(addressed_array_t *aa, u32 element_id) {
+int aa_drop_element(aa_Array *aa, u32 element_id) {
     khint_t _i;
     _i = kh_get(id_ix_map, aa->address_book, element_id);
     if (_i == kh_end(aa->address_book)) {
@@ -122,7 +122,7 @@ int aa_drop_element(addressed_array_t *aa, u32 element_id) {
     return (int) del_ix;
 }
 
-int aa_get_next_supplemental_data_ix(addressed_array_t *aa) {
+int aa_get_next_supplemental_data_ix(aa_Array *aa) {
     if(!aa->count) return -1;
     if(aa->supplemental_data_ix >= aa->count)
         aa->supplemental_data_ix = 0;

@@ -25,7 +25,7 @@ When an element is deleted the last element of the array is moved to the vacated
 
 // The first prop. of the elem. should be an uint32_t with the field name "id".
 typedef struct test_object_t {
-    addressed_array_base_t base;
+    aa_Array_Base base;
     int  a;
 } test_object_t;
 

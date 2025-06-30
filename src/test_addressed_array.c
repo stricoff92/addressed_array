@@ -12,7 +12,7 @@
 
 
 typedef struct test_object_1_t {
-    addressed_array_base_t base;
+    aa_Array_Base base;
     int  a;
     int  b;
     char c;
@@ -20,19 +20,19 @@ typedef struct test_object_1_t {
 } test_object_1_t;
 
 typedef struct test_object_2_t {
-    addressed_array_base_t base;
+    aa_Array_Base base;
     int  a;
 } test_object_2_t;
 
 typedef struct test_object_3_t {
-    addressed_array_base_t base;
+    aa_Array_Base base;
     char  name[24];
 } test_object_3_t;
 
 
 
 void test_can_get_arbitrary_objects_id_value() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_3_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_3_t), 10, 10);
     test_object_3_t* s1 = aa_allocate_pointer_to_new_slot(&aa, 75);
     s1->base.id = 75;
     strcpy(s1->name, "foobar");
@@ -47,7 +47,7 @@ void test_can_get_arbitrary_objects_id_value() {
 }
 
 void test_can_create_addressed_array_with_initial_dimensions() {
-    addressed_array_t* aa = aa_malloc_addressed_array(24, 10, 12);
+    aa_Array* aa = aa_malloc_addressed_array(24, 10, 12);
     assert(aa->element_width == 24);
     assert(aa->capacity == 10);
     assert(aa->realloc_size == 12);
@@ -58,7 +58,7 @@ void test_can_create_addressed_array_with_initial_dimensions() {
 }
 
 void test_a_created_addressed_array_has_an_initial_size_of_zero() {
-    addressed_array_t* aa = aa_malloc_addressed_array(24, 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(24, 10, 10);
     assert(kh_size(aa->address_book) == 0);
     assert(aa->count == 0);
 
@@ -68,7 +68,7 @@ void test_a_created_addressed_array_has_an_initial_size_of_zero() {
 
 
 void test_a_pointer_to_the_first_data_slot_can_be_calculated() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
     test_object_1_t *te = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 1);
 
     // pointer to first data element should be same as the address
@@ -80,7 +80,7 @@ void test_a_pointer_to_the_first_data_slot_can_be_calculated() {
 }
 
 void test_a_pointer_to_the_second_data_slot_can_be_calculated() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
     test_object_1_t *te1 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 1);
     test_object_1_t *te2 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 2);
 
@@ -91,7 +91,7 @@ void test_a_pointer_to_the_second_data_slot_can_be_calculated() {
 }
 
 void test_allocating_a_new_pointer_updates_the_address_book() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
     test_object_1_t *te1 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 1337);
     test_object_1_t *te2 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 42069);
 
@@ -109,7 +109,7 @@ void test_allocating_a_new_pointer_updates_the_address_book() {
 }
 
 void test_a_data_pointer_can_be_returned_by_searching_by_id() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
     test_object_1_t *te1 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 1337);
     test_object_1_t *te2 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 42069);
     test_object_1_t *te3 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 12345);
@@ -129,7 +129,7 @@ void test_a_data_pointer_can_be_returned_by_searching_by_id() {
 }
 
 void test_data_can_be_written_to_and_read_from_data_pointers() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
     test_object_1_t *te1 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 111);
     test_object_1_t *te2 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 222);
 
@@ -160,7 +160,7 @@ void test_data_can_be_written_to_and_read_from_data_pointers() {
 }
 
 void test_null_pointer_is_returned_when_element_id_is_not_found() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
     test_object_1_t *te1 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 111);
     test_object_1_t *te2 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 222);
 
@@ -175,7 +175,7 @@ void test_null_pointer_is_returned_when_element_id_is_not_found() {
 }
 
 void test_null_pointer_is_returned_when_allocating_a_pointer_for_an_id_that_is_already_in_use() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
     test_object_1_t *te1 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 111);
     test_object_1_t *te2 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 222);
     assert(te1 != NULL);
@@ -188,7 +188,7 @@ void test_null_pointer_is_returned_when_allocating_a_pointer_for_an_id_that_is_a
 }
 
 void test_attempt_to_get_id_of_offset_that_is_out_of_range() {
-    addressed_array_t* aa = aa_malloc_addressed_array(
+    aa_Array* aa = aa_malloc_addressed_array(
         sizeof (test_object_1_t),
         410,
         10
@@ -205,7 +205,7 @@ void test_attempt_to_get_id_of_offset_that_is_out_of_range() {
 }
 
 void test_data_block_is_expanded_when_data_block_hits_capacity() {
-    addressed_array_t* aa = aa_malloc_addressed_array(
+    aa_Array* aa = aa_malloc_addressed_array(
         sizeof (test_object_1_t),
         4, // initial capacity (num. of elements)
         2 // reallocation size (num. of elements)
@@ -285,7 +285,7 @@ void test_the_address_array_pointer_is_updated_if_realloc_is_called() {
         enough, the realloc() function may simply expand the block
         in place. If this happens this test will fail.
     */
-    addressed_array_t* aa = aa_malloc_addressed_array(
+    aa_Array* aa = aa_malloc_addressed_array(
         sizeof (test_object_1_t),
         100, // initial capacity (num. of elements)
         300  // reallocation size (num. of elements)
@@ -305,7 +305,7 @@ void test_the_address_array_pointer_is_updated_if_realloc_is_called() {
     assert(aa->count == 101);
 
     // assert
-    // The address of the addressed_array_t struct should have changed.
+    // The address of the aa_Array struct should have changed.
     // This test may fail if the realloc() function simply expanded
     // the block in place, without moving it.
     assert(((u64) aa) != initial_address);
@@ -314,7 +314,7 @@ void test_the_address_array_pointer_is_updated_if_realloc_is_called() {
 }
 
 void test_delete_only_element() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_2_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_2_t), 10, 10);
     test_object_2_t *te1 = (test_object_2_t*) aa_allocate_pointer_to_new_slot(&aa, 111);
     te1->base.id = 111;
     te1->a = 69;
@@ -330,7 +330,7 @@ void test_delete_only_element() {
 }
 
 void test_delete_element_that_doesnt_exist() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_2_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_2_t), 10, 10);
     test_object_2_t *te1 = (test_object_2_t*) aa_allocate_pointer_to_new_slot(&aa, 111);
     te1->base.id = 111;
     te1->a = 69;
@@ -351,7 +351,7 @@ void test_delete_element_that_doesnt_exist() {
 }
 
 void test_deleting_the_last_data_element_does_not_cause_a_reshuffling() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_2_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_2_t), 10, 10);
     test_object_2_t *te1 = (test_object_2_t*) aa_allocate_pointer_to_new_slot(&aa, 111);
     test_object_2_t *te2 = (test_object_2_t*) aa_allocate_pointer_to_new_slot(&aa, 222);
     assert(aa->count == 2);
@@ -379,7 +379,7 @@ void test_deleting_the_last_data_element_does_not_cause_a_reshuffling() {
 }
 
 void test_deleting_the_first_data_element_does_cause_a_reshuffling() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_2_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_2_t), 10, 10);
     test_object_2_t *te1 = (test_object_2_t*) aa_allocate_pointer_to_new_slot(&aa, 111);
     test_object_2_t *te2 = (test_object_2_t*) aa_allocate_pointer_to_new_slot(&aa, 222);
     test_object_2_t *te3 = (test_object_2_t*) aa_allocate_pointer_to_new_slot(&aa, 333);
@@ -423,7 +423,7 @@ void test_deleting_the_first_data_element_does_cause_a_reshuffling() {
 }
 
 void test_deleting_a_middle_element_does_cause_a_reshuffling() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_2_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_2_t), 10, 10);
     test_object_2_t *te1 = (test_object_2_t*) aa_allocate_pointer_to_new_slot(&aa, 111);
     test_object_2_t *te2 = (test_object_2_t*) aa_allocate_pointer_to_new_slot(&aa, 222);
     test_object_2_t *te3 = (test_object_2_t*) aa_allocate_pointer_to_new_slot(&aa, 333);
@@ -465,7 +465,7 @@ void test_deleting_a_middle_element_does_cause_a_reshuffling() {
 }
 
 void test_aa_get_next_supplemental_data_ix_step_through_data() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
 
     test_object_1_t *obj1 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 15);
     assert(obj1 != NULL);
@@ -491,7 +491,7 @@ void test_aa_get_next_supplemental_data_ix_step_through_data() {
 }
 
 void test_aa_get_next_supplemental_data_ix_counter_resets_to_zero_at_end() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
 
     test_object_1_t *obj1 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 15);
     assert(obj1 != NULL);
@@ -515,7 +515,7 @@ void test_aa_get_next_supplemental_data_ix_counter_resets_to_zero_at_end() {
 }
 
 void test_aa_get_next_supplemental_data_ix_counter_resets_to_zero_if_array_shrinks_below_ix() {
-    addressed_array_t* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
+    aa_Array* aa = aa_malloc_addressed_array(sizeof (test_object_1_t), 10, 10);
 
     test_object_1_t *obj1 = (test_object_1_t*) aa_allocate_pointer_to_new_slot(&aa, 15);
     assert(obj1 != NULL);
