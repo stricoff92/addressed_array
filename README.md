@@ -24,13 +24,13 @@ When an element is deleted the last element of the array is moved to the vacated
 #include "base_object.h"
 
 // The first prop. of the elem. should be an uint32_t with the field name "id".
-typedef struct test_object_t {
+typedef struct {
     aa_Array_Base base;
     int  a;
-} test_object_t;
+} Test_Object;
 
 AddressedArray* aa = aa_malloc_addressed_array(
-    sizeof (test_object_t), // Element Size
+    sizeof (Test_Object), // Element Size
     10,                    // Initial Capacity
     10                     // Reallocation Size
 );
@@ -38,9 +38,9 @@ AddressedArray* aa = aa_malloc_addressed_array(
 // Reserve slots for 2 elements with ids 1337 and 42069 respectively.
 // We pass a pointer to aa so the caller's reference can be updated if
 // aa_allocate_pointer_to_new_slot calls realloc.
-test_object_t *to1 = aa_allocate_pointer_to_new_slot(&aa, 1337);
-test_object_t *to2 = aa_allocate_pointer_to_new_slot(&aa, 42069);
-test_object_t *to3 = aa_allocate_pointer_to_new_slot(&aa, 321);
+Test_Object *to1 = aa_allocate_pointer_to_new_slot(&aa, 1337);
+Test_Object *to2 = aa_allocate_pointer_to_new_slot(&aa, 42069);
+Test_Object *to3 = aa_allocate_pointer_to_new_slot(&aa, 321);
 
 // Write data to the data structure
 to1->base.id = 1337;
@@ -52,20 +52,20 @@ to2->a = 1337;
 to3->a = 13444;
 
 // write data using memcpy
-test_object_t data;
+Test_Object data;
 data.base.id = 1337;
 data.a = 123;
-test_object_t *to1 = aa_allocate_pointer_to_new_slot(&aa, 1337);
-memcpy(to1, &data, sizeof (test_object_t))
+Test_Object *to1 = aa_allocate_pointer_to_new_slot(&aa, 1337);
+memcpy(to1, &data, sizeof (Test_Object))
 
 // Query object 1337
-test_object_t *q1 = (test_object_t*) aa_get_pointer_from_id(aa, 1337)
+Test_Object *q1 = (Test_Object*) aa_get_pointer_from_id(aa, 1337)
 printf("id = %d\n", q1->base.id);
 
 // Loop through elements
 for(int i=0; i < aa->count; i++)
 {
-    test_object_t *o = ((test_object_t*) aa->data) + i;
+    Test_Object *o = ((Test_Object*) aa->data) + i;
     printf("%d %d\n", o->base.id, o->a)
 }
 
